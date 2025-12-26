@@ -89,9 +89,42 @@ def collect_reverse(from_node, to_node, result):
 
 
 
-class Solution:   
+class Solution:
     
-    def postorder_morris_traversal(self, root: BinaryTreeNode):
+    def postorder_morris_traversal_simple(self, root : BinaryTreeNode):
+        
+        result = []
+        
+        current_ptr = root
+        
+        while current_ptr:
+            if not current_ptr.right: ## Change left to right
+                result.append(current_ptr.val)
+                current_ptr = current_ptr.left #change right to left
+            else:                
+                predecessor_ptr =  current_ptr.right ## Change left to right
+                while predecessor_ptr.left and predecessor_ptr.left != current_ptr:  #change right to left
+                    predecessor_ptr = predecessor_ptr.left  #change right to left
+                    
+                if not predecessor_ptr.left:  #change right to left
+                    result.append(current_ptr.val)
+                    predecessor_ptr.left = current_ptr  #change right to left
+                    current_ptr = current_ptr.right ## Change left to right
+                else:
+                    predecessor_ptr.left = None  #change right to left
+                    current_ptr = current_ptr.left  #change right to left
+        
+        return result[::-1]
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    def postorder_morris_traversal_complex(self, root: BinaryTreeNode):
         
         result = []
         dummy = BinaryTreeNode(0)
@@ -128,4 +161,5 @@ if __name__ == "__main__":
     print_tree(root)    
     
     sol = Solution()
-    print(f'Optimal : {sol.postorder_morris_traversal(root)}')
+    print(f'Complex Solution : {sol.postorder_morris_traversal_complex(root)}')
+    print(f'Simple Solution : {sol.postorder_morris_traversal_simple(root)}')
