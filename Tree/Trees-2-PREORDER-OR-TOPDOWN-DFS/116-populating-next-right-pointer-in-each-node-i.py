@@ -95,15 +95,21 @@ def print_levels_with_next(root):
 
 
 class Solution:
-    def populate_next_bin_tree_in_each_node(self, root :BinaryTreeNode):       
+    def populate_next_bin_tree_in_each_node(self, root :BinaryTreeNode):   
+        global_result = []   
         
         
         def helper(node: BinaryTreeNode, my_next_right: BinaryTreeNode):
+            nonlocal global_result
             
             if not node:
                 return
             
-            node.next = my_next_right               
+            node.next = my_next_right
+            if not my_next_right:
+                global_result.append('#')
+            else:
+                global_result.append(my_next_right.val)
             
             
             if node.left:
@@ -119,8 +125,30 @@ class Solution:
         
         
         helper(root, None)
-        return root;
+        return root
 
+  # Note : we are writing for a perfect Binary Tree
+    def populate_next_bin_tree_in_each_node(root : BinaryTreeNode):
+        global_result = []
+        
+        
+        def helper(node: BinaryTreeNode):
+            nonlocal global_result
+            
+            if not node:
+                return None
+            
+            global_result.append(node.val)
+            
+            if node.next:
+                global_result.append('#')
+            
+            #left chile always points to right child regardless if its null or not
+            node.left.next = node.right
+            if node
+            
+            if node.next:
+                node.right.next = node.next.left
             
 
 if __name__ == "__main__":

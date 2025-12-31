@@ -114,12 +114,12 @@ class Solution:
                     new_right_node.right = node.right
                     node.left = new_left_node
                     node.right = new_right_node
-                
-                if node.left:
-                    queue.append(node.left)
-                
-                if node.right:
-                    queue.append(node.right)
+                else:
+                    if node.left:
+                        queue.append(node.left)
+                    
+                    if node.right:
+                        queue.append(node.right)
                 
         
         return root
@@ -134,12 +134,12 @@ class Solution:
 if __name__ == "__main__":
     values = [4,2,6,3,1,5] 
     val=1 
-    depth=4 
+    depth=3
 
     
     sol = Solution()
     
-    print('values = [4,2,6,3,1,5] val=1 and depth=4 ')    
+    print('values = [4,2,6,3,1,5] val=1 and depth=3 ')    
     root = build_binary_tree2(values)      
     print_tree(root) 
     

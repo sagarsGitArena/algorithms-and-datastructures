@@ -1,0 +1,251 @@
+
+
+# from typing import Optional, List
+from collections import deque
+
+
+# --------------------------
+# TreeNode definition
+# --------------------------
+
+class BinaryTreeNode:
+    def __init__(self, val=0, left=None, right=None, next = None):
+        self.val = val
+        self.left=left
+        self.right=right
+        self.next=next
+
+
+
+def print_levels_with_next(root):
+    level_start = root
+
+    while level_start:
+        curr = level_start
+        level_str = []
+
+        # walk horizontally using `.next`
+        while curr:
+            nxt = curr.next.val if curr.next else None
+            level_str.append(f"{curr.val} -> {nxt}")
+            curr = curr.next
+
+        print("   ".join(level_str))
+
+        # move down: for perfect tree we can just use left child
+        # for LC117 (general), we should find the first child
+        if level_start.left:
+            level_start = level_start.left
+        elif level_start.right:
+            level_start = level_start.right
+        else:
+            # find first child in level linked by next pointers
+            tmp = level_start.next
+            found = None
+            while tmp and not found:
+                if tmp.left:
+                    found = tmp.left
+                elif tmp.right:
+                    found = tmp.right
+                tmp = tmp.next
+            level_start = found
+
+
+# --------------------------
+# Print tree sideways
+# --------------------------
+def print_tree(node: BinaryTreeNode | None, prefix: str = "", is_left: bool = True):
+    if node is None:
+        return
+
+    # Print right child first
+    if node.right:
+        print_tree(node.right, prefix + ("│   " if is_left else "    "), False)
+
+    # Print current node
+    print(prefix + ("└── " if is_left else "┌── ") + str(node.val))
+
+    # Print left child
+    if node.left:
+        print_tree(node.left, prefix + ("    " if is_left else "│   "), True)
+
+
+
+def build_tree(values : list[int | None]) -> BinaryTreeNode | None:
+    if not values:
+        return None
+    
+    root = BinaryTreeNode(values[0])
+    queue = deque([root])
+    i = 1
+    
+    while queue and i < len(values):
+        node = queue.popleft()
+        
+        if values[i] is not None:
+            node.left = BinaryTreeNode(values[i])
+            queue.append(node.left)
+        i += 1
+        
+        if i >= len(values):
+            break
+        
+        if values[i] is not None:
+            node.right = BinaryTreeNode(values[i])
+            queue.append(node.right)
+        i += 1
+        
+    return root
+
+class Solution:
+    
+    
+    def leet_code_104_maximum_depth_of_bst(self, root: BinaryTreeNode):
+        
+        max_depth = 0
+        
+        
+        def helper(node : BinaryTreeNode, level :int):
+            nonlocal max_depth
+            
+            if not node:
+                return 0
+            
+            level += 1
+            if not node.left and not node.right:
+                max_depth = max(max_depth, level)
+            
+            if node.left:
+                helper(node.left, level)
+            
+            if node.right:
+                helper(node.right, level)
+
+
+    
+        helper(root, 0)      
+        return max_depth
+
+
+    def leet_code_103_minimum_depth_of_bst(self, root: BinaryTreeNode):
+        min_depth = float("inf")
+        
+        def helper(node: BinaryTreeNode, level :int ):
+            nonlocal min_depth
+            if not node:
+                return 0
+            
+            level += 1
+            if not node.left and not node.right:                
+                min_depth = min(min_depth, level)
+                
+            if node.left:
+                helper(node.left, level)
+            if node.right:
+                helper(node.right, level)
+        
+        helper(root, 0)
+        return min_depth
+    
+    def leet_code_112_path_sum_i(self, root: BinaryTreeNode, targetSum : int):
+        
+        result = False
+        
+        def helper(node: BinaryTreeNode, target_sum:int, sum: int):
+            nonlocal result
+            
+            if not node:
+                return
+            
+            
+            sum += node.val
+            print(f'node.val:{node.val} -- SUM:{sum}')
+            if not node.left and not node.right:
+                if sum == target_sum:
+                    result = True
+            
+            if node.left:
+                helper(node.left, target_sum, sum)
+            
+            if node.right:
+                helper(node.right, target_sum, sum)
+        
+        helper(root, targetSum, 0)
+        return result
+
+    def leet_code_113_path_sum_ii(self, node : BinaryTreeNode, target_sum: int):
+        
+        result = []
+        
+        def helper(node: BinaryTreeNode, target_sum, sum: int, path: list):
+            if not node:
+                return []
+            
+            
+            sum += node.val
+            path.append(node.val)
+            print(f'node.val:{node.val} -- SUM:{sum} - {path}')
+            if not node.left and not node.right:
+                if sum == target_sum:                
+                    result.append(path.copy())
+            
+            if node.left:
+                helper(node.left, target_sum, sum, path)
+            
+            if node.right:
+                helper(node.right, target_sum, sum, path)
+            
+            path.pop()
+        
+        helper(root, targetSum, 0, [])
+        return result
+        
+    def leet_code_116_populate_next_right_pointer_in_each_node(self, root : BinaryTreeNode):
+        
+        def helper(node :BinaryTreeNode, right_node : BinaryTreeNode):
+            
+            if not node:
+                return 
+            
+            node.next = right_node
+            
+            if node.left:
+                helper(node.left, node.right)
+                
+            if node.right:
+                if right_node:
+                    helper(node.right, right_node.left)
+                else:
+                    helper(node.right, None)
+        
+        helper(root, None)
+        return root
+        
+if __name__ == "__main__":
+    values = [3,9,20,None,None,15,7]
+    
+    
+    root = build_tree(values)      
+    print_tree(root)    
+    
+    sol = Solution()
+    print(f'104 maximum depth of a bianry tree : {sol.leet_code_104_maximum_depth_of_bst(root)}')
+    print(f'103 minimum depth of a bianry tree : {sol.leet_code_103_minimum_depth_of_bst(root)}')    
+    
+    values = [5,4,8,11,None,13,4,7,2,None,None,5,1]
+    targetSum = 22
+    root = build_tree(values)      
+    print_tree(root)    
+    
+    print(f'112 path sum i : {sol.leet_code_112_path_sum_i(root, targetSum )}')
+    print(f'113 path sum ii: {sol.leet_code_113_path_sum_ii(root, targetSum)}')
+    
+    values  = [1,2,3,4,5,6,7]
+    root = build_tree(values)      
+    print_tree(root)    
+    print(f'116 populate next right pointer in each node(REVISE AND REVISIT): ')
+    modified_tree = sol.leet_code_116_populate_next_right_pointer_in_each_node(root)
+    print_levels_with_next(modified_tree)
+
+
+

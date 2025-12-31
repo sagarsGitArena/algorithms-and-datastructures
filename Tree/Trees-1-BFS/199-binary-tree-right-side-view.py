@@ -149,7 +149,7 @@ if __name__ == "__main__":
     values = [3,9, 20,None, None, 15, 7]
     values = [1,2,3,None, 5, None, 4]
     values = [1,2,3,4,None, None, None, 5]
-    values = [1, None, 3]
+    #values = [1, None, 3]
     root = build_tree(values)      
     print_tree(root)    
     

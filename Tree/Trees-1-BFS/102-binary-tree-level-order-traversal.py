@@ -218,7 +218,7 @@ if __name__ == "__main__":
     
   
        
-    root = build_binary_tree(values)  
+    root = build_binary_tree2(values)  
     print_tree(root)       
     
     
@@ -228,8 +228,8 @@ if __name__ == "__main__":
     print("Input:", values)
     print("Level Order Traversal:", output)
     
-    # print('--------------------------------------')
-    # print(root.val)
-    # output2 = sol.bottomUpLevelOrder2(root)
-    # print("Input:", values)
-    # print("Bottom Up Level Order Traversal:", output2)
+    print('--------------------------------------')
+    print(root.val)
+    output2 = sol.bottomUpLevelOrder2(root)
+    print("Input:", values)
+    print("Bottom Up Level Order Traversal:", output2)
