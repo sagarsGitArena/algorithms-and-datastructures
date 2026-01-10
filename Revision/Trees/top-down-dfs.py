@@ -200,7 +200,7 @@ class Solution:
         helper(root, targetSum, 0, [])
         return result
         
-    def leet_code_116_populate_next_right_pointer_in_each_node(self, root : BinaryTreeNode):
+    def leet_code_116_populate_next_right_pointer_in_each_node_of_a_perfect_binary_tree(self, root : BinaryTreeNode):
         
         def helper(node :BinaryTreeNode, right_node : BinaryTreeNode):
             
@@ -219,6 +219,65 @@ class Solution:
                     helper(node.right, None)
         
         helper(root, None)
+        return root
+
+    def leet_code_116_populate_next_right_pointer_in_each_node_of_a_perfect_binary_tree2(self, root : BinaryTreeNode):
+        
+        def helper(node: BinaryTreeNode):
+            if not node:
+                return None
+            
+            if node.left:
+                node.left.next = node.right
+            
+            if node.next and node.right:
+                node.right.next = node.next.left
+            
+            helper(node.left)
+            helper(node.right)
+        
+        helper(root)
+        
+        return root
+    
+    
+    
+    def leet_code_117_populate_next_right_pointer_in_each_node_of_an_imperfect_binary_tree(self, root: BinaryTreeNode):
+        def find_next_node(node: BinaryTreeNode):
+            while node:
+                if node.left:
+                    return node.left
+                if node.right:
+                    return node.right
+                
+                node = node.next
+
+
+            return node
+        
+        def helper(node: BinaryTreeNode):
+            if not node:
+                return None
+            
+            next_node = find_next_node(node.next)
+
+            
+            if node.right:
+                node.right.next = next_node
+            
+            if node.left:
+                if node.right:
+                    node.left.next = node.right
+                else:
+                    node.left.next = next_node\
+            
+            
+            
+            helper(node.left)
+            helper(node.right)
+            
+        
+        helper(root)
         return root
         
 if __name__ == "__main__":
@@ -243,9 +302,24 @@ if __name__ == "__main__":
     values  = [1,2,3,4,5,6,7]
     root = build_tree(values)      
     print_tree(root)    
-    print(f'116 populate next right pointer in each node(REVISE AND REVISIT): ')
-    modified_tree = sol.leet_code_116_populate_next_right_pointer_in_each_node(root)
+    print(f'116 populate next right pointer in each node of perfect binary tree v1(REVISE AND REVISIT): ')
+    modified_tree = sol.leet_code_116_populate_next_right_pointer_in_each_node_of_a_perfect_binary_tree(root)
     print_levels_with_next(modified_tree)
-
-
+    
+    
+    values  = [1,2,3,4,5,6,7]
+    root = build_tree(values)      
+    print_tree(root)    
+    print(f'116 populate next right pointer in each node of perfect binary tree v2(REVISE AND REVISIT): ')
+    modified_tree2 = sol.leet_code_116_populate_next_right_pointer_in_each_node_of_a_perfect_binary_tree2(root)
+    print_levels_with_next(modified_tree2)
+    
+    values  = [1,2,3,4,5,None,7]
+    values = [1,2,3,4, None,None, 7]
+    values = [1,2,3,4, None,None, 5,6,None, 7, 8,9,None,None,None,None,10]
+    root = build_tree(values)      
+    print_tree(root)    
+    print(f'117 populate next right pointer in each node of imperfect binary tree v1(REVISE AND REVISIT): ')
+    modified_tree = sol.leet_code_117_populate_next_right_pointer_in_each_node_of_an_imperfect_binary_tree(root)
+    print_levels_with_next(modified_tree)
 
