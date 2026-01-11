@@ -62,31 +62,28 @@ def build_tree(values : list[int | None]) -> BinaryTreeNode | None:
 
 class Solution:
     
-    def binary_tree_longest_consecutive_sequence(self, root: BinaryTreeNode):
+    def leet_code_298_binary_tree_longest_consecutive_sequence(self, root: BinaryTreeNode):
         
-        global_max_seq_length = float("-Inf")
-        seq_length = 0
+        global_max = 1
         
-        def helper(node: BinaryTreeNode, prev_node_val: int ):          
-            nonlocal global_max_seq_length
-            nonlocal seq_length
+        
+        def helper(node: BinaryTreeNode, parent_node_val: int, seq_cnt: int):
+            nonlocal global_max
+            if not node:
+                return None
             
-            
-            if (prev_node_val + 1) == node.val:
-                seq_length += 1               
+            if (node.val - parent_node_val ==1):
+                seq_cnt += 1
             else:
-                seq_length = 1
+                seq_cnt = 1
             
-            global_max_seq_length = max(global_max_seq_length, seq_length)            
+            global_max = max(seq_cnt, global_max)
             
-            if node.left:
-                helper(node.left, node.val)            
-            
-            if node.right:
-                helper(node.right, node.val)
-            
-        helper(root, -1)
-        return global_max_seq_length
+            helper2(node.left, node.val, seq_cnt)
+            helper2(node.right, node.val, seq_cnt)
+        
+        helper2(root, root.val -1, 1)
+        return global_max
 
 
 
@@ -100,7 +97,7 @@ if __name__ == "__main__":
     print_tree(root)    
     
     sol = Solution()
-    results = sol.binary_tree_longest_consecutive_sequence(root)
+    results = sol.leet_code_298_binary_tree_longest_consecutive_sequence(root)
     print(results)
     # print(len(results))
         

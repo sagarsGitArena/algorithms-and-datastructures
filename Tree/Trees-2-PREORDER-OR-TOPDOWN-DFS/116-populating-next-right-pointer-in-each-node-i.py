@@ -143,14 +143,14 @@ class Solution:
             if node.next:
                 global_result.append('#')
             
-            #left chile always points to right child regardless if its null or not
+            #left child always points to right child regardless if its null or not
             node.left.next = node.right
-            if node
+            
             
             if node.next:
                 node.right.next = node.next.left
-            
 
+    
 if __name__ == "__main__":
     values = [1, 2,3,4,5,6,7]
     #values = [2,None,3,2,None,1]

@@ -279,6 +279,137 @@ class Solution:
         
         helper(root)
         return root
+    
+    def leetcode_226_invert_a_binary_tree(self, root: BinaryTreeNode):
+        
+        def helper(node: BinaryTreeNode):
+            if not node:
+                return None
+        
+            tmp = node.left
+            node.left = node.right
+            node.right = tmp
+            ## instead you can do the following to swap
+            #node.left, node.right = node.right, node.left
+
+            
+            helper(node.left)
+            helper(node.right)
+        
+        helper(root)
+        return root
+
+    def leetcode_257_binary_tree_path(self, root: BinaryTreeNode):
+        result = []
+        
+        def helper(node: BinaryTreeNode, slate: list):
+            if not node:
+                return None
+            
+            slate.append(node.val)
+            if not node.left and not node.right:
+                #result.append(slate[:])
+                result.append("->".join(map(str, slate)))
+            else:
+                helper(node.left, slate)
+                helper(node.right, slate)
+            slate.pop()
+            
+        
+        helper(root, [])        
+        return result
+
+    def leet_code_298_binary_tree_longest_consecutive_sequence(self, root: BinaryTreeNode):
+        
+        global_max = 1
+        
+        
+        def helper2(node: BinaryTreeNode, parent_node_val: int, seq_cnt: int):
+            nonlocal global_max
+            if not node:
+                return None
+            
+            if (node.val - parent_node_val ==1):
+                seq_cnt += 1
+            else:
+                seq_cnt = 1
+            
+            global_max = max(seq_cnt, global_max)
+            
+            helper2(node.left, node.val, seq_cnt)
+            helper2(node.right, node.val, seq_cnt)
+        
+        helper2(root, root.val -1, 1)
+        return global_max
+    
+    def leet_code_298_binary_tree_longest_consecutive_sequence_2(self, root: BinaryTreeNode):
+        if not root:
+            return []
+        
+        global_result = []
+        
+        ## The following is rebinding solution. Also compare with other version of the soution where we dont pop at all. 
+        def helper(node: BinaryTreeNode, parent_val:int, result):
+            nonlocal  global_result
+            if not node:
+                return
+            
+            if node.val -1 == parent_val:
+                result.append(node.val)
+            else:
+                ## This mutates and not recommended, as you cannot backtrack
+                #result.clear()
+                #result.append(node.val)
+                ##The following just rebinds and not mutates. Helps backtracking. We need to ensure we only backtrack the last element added(appended)
+                result = [node.val]
+                
+            if len(result) > len(global_result):                
+                global_result = result[:]
+            
+
+            
+            helper(node.left, node.val, result)
+            helper(node.right, node.val, result)
+
+            # Only backtrack if we mutated the same list (appended)
+            if  result and result[-1] == node.val and node.val == parent_val + 1:
+                result.pop()
+            
+        
+        helper(root, root.val - 1, [])
+        return global_result
+    
+    
+    ### Rebinding copy on write solution
+    def leet_code_298_binary_tree_longest_consecutive_sequence_2_v2(self, root: BinaryTreeNode):
+        if not root:
+            return []
+        
+        global_result = []
+        
+        ## The following is rebinding solution. Also compare with other version of the soution where we dont pop at all. 
+        def helper(node: BinaryTreeNode, parent_val:int, result):
+            nonlocal  global_result
+            if not node:
+                return
+            
+            ## Here we are creating new list every time: Rebinding/copy on write
+            if node.val == parent_val + 1:
+                new_result = result + [node.val] 
+            else:
+                new_result = [node.val]
+
+            if len(new_result) > len(global_result):
+                global_result = new_result
+            
+            
+            helper(node.left, node.val, new_result)
+            helper(node.right, node.val, new_result)
+            ## HEre you dont need to pop as we every time have new list at each branch.
+        
+        helper(root, root.val - 1, [])
+        return global_result
+            
         
 if __name__ == "__main__":
     values = [3,9,20,None,None,15,7]
@@ -322,4 +453,51 @@ if __name__ == "__main__":
     print(f'117 populate next right pointer in each node of imperfect binary tree v1(REVISE AND REVISIT): ')
     modified_tree = sol.leet_code_117_populate_next_right_pointer_in_each_node_of_an_imperfect_binary_tree(root)
     print_levels_with_next(modified_tree)
+    
+    values = [4,2,7,1,3,6,9]
+    root = build_tree(values)      
+    print_tree(root)    
+    print(f'226 Invert a binary tree: ')
+    modified_tree = sol.leetcode_226_invert_a_binary_tree(root)
+    print_tree(modified_tree) 
+    
+    values = [1,2,3,4, None,None, 5,6,None, 7, 8,9,None,None,None,None,10]
+    root = build_tree(values)      
+    print_tree(root)    
+    print(f'257 binary_tree_path: ')
+    print(sol.leetcode_257_binary_tree_path(root))
+    
 
+
+    print(f'298 binary tree longest consequence sequence: (REVISIT THIS AGAIN) ')  
+    values = [1,None,3,2,4,None,None,None,5]
+    #values = [2,None,3,2,None,1]
+    #values = [2,None,3,2,1,4]
+    values = [1,None,3,2,4,3, 4, None ,5,8,4, None,None,None, None, None, None, 5, None]
+    root = build_tree(values)      
+    print_tree(root)    
+    
+    sol = Solution()  
+    print(sol.leet_code_298_binary_tree_longest_consecutive_sequence(root))
+
+
+
+    print(f'298 binary tree longest consequence sequence: (REVISIT THIS AGAIN) ')  
+    values = [1,None,3,2,4,None,None,None,5]
+    #values = [2,None,3,2,None,1]
+    #values = [2,None,3,2,1,4]
+    values = [1,None,3,2,4,3, 4, None ,5,8,4, None,None,None, None, None, None, 5, None]
+    root = build_tree(values)      
+    print_tree(root)  
+    sol = Solution()  
+    print(sol.leet_code_298_binary_tree_longest_consecutive_sequence_2(root))
+    
+    print(f'298 binary tree longest consequence sequence _V2: (REVISIT THIS AGAIN) ')  
+    values = [1,None,3,2,4,None,None,None,5]
+    #values = [2,None,3,2,None,1]
+    #values = [2,None,3,2,1,4]
+    values = [1,None,3,2,4,3, 4, None ,5,8,4, None,None,None, None, None, None, 5, None]
+    root = build_tree(values)      
+    print_tree(root)  
+    sol = Solution()  
+    print(sol.leet_code_298_binary_tree_longest_consecutive_sequence_2_v2(root))
