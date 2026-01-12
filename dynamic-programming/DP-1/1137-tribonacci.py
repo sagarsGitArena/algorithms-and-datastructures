@@ -15,9 +15,14 @@ class Tribonacci:
     
     # Time: O(n) and Space: O(1)
     def tribonacci_v2(self, n:int):
-        var0 = 0
-        var1 = 1
-        var2 = 1
+        if n==0:
+            return 0
+        
+        if n==1 or n ==2:
+            return 1
+        
+        
+        var0, var1, var2 = 0, 1,1
         
         for _ in range(3, n+1):
             curr = var0 + var1 + var2
