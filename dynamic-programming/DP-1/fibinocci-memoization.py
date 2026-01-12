@@ -2,12 +2,16 @@
 class Fibinocci:
     def __init__(self):
         self.memo = {}
+        
+    ## Exponential solution: Those who cannot remember the past are condemned to repeat it
     def fibinocci_recursive(self, n:int):
         if n==0 or n==1:
             return n
         
         return self.fibinocci_recursive(n-1) + self.fibinocci_recursive(n-2)
     
+    
+    ## This recursoin with out repetition -- top down
     def fibinocci_memoization(self, n:int):
         if n in self.memo:
             return self.memo[n]
